@@ -1,0 +1,69 @@
+﻿@model IEnumerable<HelpDeskWeb2.Models.Ticket>
+@{
+    ViewData["Title"] = "Müraciətlər";
+}
+<div class="container mt-4">
+    <h2>Texniki dəstək müraciətləri</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a asp-action="Create" class="btn btn-primary">Yeni müraciət yarat</a>
+        <form asp-action="Index" method="get" class="d-flex gap-2">
+            <input type="text" name="searchString" class="form-control" placeholder="Başlıq üzrə axtar..." />
+            <select name="category" class="form-select">
+                <option value="">Bütün kateqoriyalar</option>
+                <option value="Computer">Kompüter</option>
+                <option value="Internet">İnternet</option>
+                <option value="Printer">Printer</option>
+                <option value="Software">Proqram təminatı</option>
+            </select>
+            <select name="status" class="form-select">
+                <option value="">Bütün statuslar</option>
+                <option value="New">New</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+            </select>
+            <button type="submit" class="btn btn-dark">Filtrlə</button>
+        </form>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Başlıq</th>
+                <th>Kateqoriya</th>
+                <th>Prioritet</th>
+                <th>Status</th>
+                <th>Tarix</th>
+                <th>Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.Priority == "High" ? "table-danger" : "")">
+                    <td>@item.Id</td>
+                    <td>@item.Title</td>
+                    <td>@item.Category</td>
+                    <td>
+                        <span class="badge @(item.Priority == "High" ? "bg-danger" : item.Priority == "Normal" ? "bg-primary" : "bg-secondary")">
+                            @item.Priority
+                        </span>
+                    </td>
+                    <td>@item.Status</td>
+                    <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Ətraflı</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Redaktə</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (!Model.Any())
+    {
+        <p>Hələ müraciət yaradılmayıb və ya axtarışa uyğun nəticə yoxdur.</p>
+    }
+</div>
